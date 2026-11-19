@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c0d0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Parts Wizard">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<title>Parts Wizard — فاحص قطع الغيار</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--y:#FFCD11;--y2:#d9a900;--bg:#0c0d0f;--s1:#15171a;--s2:#1d2024;--s3:#262a2f;--ln:#2e3238;--t:#eef0f2;--m:#9aa1a9;--g:#22c55e;--o:#f59e0b;--r:#ef4444;--b:#60a5fa}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--t);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:15px}
+code,pre,.mono{font-family:"JetBrains Mono",monospace}
+.app{max-width:640px;margin:0 auto;padding:0 12px 40px}
+.top{display:flex;gap:12px;align-items:center;margin:0 -12px 12px;padding:16px;padding-top:calc(16px + env(safe-area-inset-top));background:linear-gradient(180deg,#17191c,#0c0d0f);border-bottom:3px solid var(--y)}
+.top h1{margin:0;font-size:20px;font-weight:700}.top p{margin:2px 0 0;color:var(--m);font-size:12px}
+.logo{width:48px;height:48px;border-radius:12px;background:var(--y);color:#000;display:grid;place-items:center;flex:none}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--s1);border:1px solid var(--ln);border-radius:14px;padding:4px;margin-bottom:12px;position:sticky;top:0;z-index:5}
+.tabs button{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px;border-radius:10px;font-size:12.5px;font-weight:600;color:var(--m)}
+.tabs button.on{background:var(--y);color:#000}
+.card,.sec,.part{background:var(--s1);border:1px solid var(--ln);border-radius:16px;padding:14px;margin-bottom:12px}
+.sec>header{display:flex;gap:8px;align-items:center;margin-bottom:10px;color:var(--y)}
+.sec>header h3{margin:0;font-size:15px;color:var(--t);font-weight:700}
+.part .sec{background:var(--s2);margin:12px 0 0}
+.btn{font:inherit;font-weight:600;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 14px;white-space:nowrap;transition:transform .08s}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.55}
+.btn.y{background:var(--y);color:#000;box-shadow:0 4px 0 var(--y2)}
+.btn.d{background:var(--s3);color:var(--t);border:1px solid var(--ln)}
+.btn.ghost{background:none;border:1px solid #4b2323;color:var(--r)}
+.btn.xl{padding:20px;font-size:18px;border-radius:16px;width:100%}
+.hero{display:grid;gap:10px;margin-bottom:12px}
+.tips{list-style:none;padding:12px;margin:4px 0 0;background:var(--s1);border:1px solid var(--ln);border-radius:14px;display:grid;gap:8px;font-size:13px;color:var(--m);line-height:1.7}
+.tips li{display:flex;gap:8px}.tips svg{flex:none;margin-top:4px;color:var(--y)}
+.prev{position:relative;background:#000;border-radius:12px;overflow:hidden;display:grid;place-items:center;max-height:300px}
+.prev img{max-width:100%;max-height:300px;object-fit:contain}
+.pimg{position:relative;display:inline-block;line-height:0}.lbox{position:absolute;border:3px solid var(--y);border-radius:6px;box-shadow:0 0 0 2000px rgba(0,0,0,.35)}
+.fab{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:9;background:var(--y);color:#000;border:0;border-radius:99px;padding:14px 22px;font:700 16px 'IBM Plex Sans Arabic';display:flex;gap:8px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+.app{padding-bottom:90px}
+.laser{position:absolute;inset-inline:0;height:2px;background:var(--y);box-shadow:0 0 16px 4px var(--y);animation:l 1.4s ease-in-out infinite alternate}@keyframes l{from{top:5%}to{top:95%}}
+.row2{display:flex;gap:8px;margin-top:10px}.row2 .btn.d{flex:1}
+.stage{margin-top:10px;font-size:13px;color:var(--m);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bar{flex-basis:100%;height:6px;background:#000;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--y)}
+.spin{animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.muted{color:var(--m);font-size:13px;margin:4px 0;line-height:1.7}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--s3);color:var(--t);white-space:nowrap}
+.badge.fmt{background:#000;color:var(--y);font-family:"JetBrains Mono"}
+.badge.url{background:#10233d;color:#93c5fd}.badge.gs1{background:#132b1c;color:#86efac}.badge.text{background:var(--s3)}
+.badge.brand,.badge.oem{background:var(--y);color:#000}.badge.am{background:#1e3a5f;color:#bfdbfe}
+.badge.ok{background:#123222;color:#86efac}.badge.warn{background:#3b2a07;color:#fcd34d}.badge.mute{color:var(--m)}.badge.date{background:#2a1f3d;color:#d8b4fe}
+.code{background:var(--s2);border:1px solid var(--ln);border-radius:12px;padding:10px;margin-bottom:8px}
+.code-h{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mini{margin-inline-start:auto;background:none;border:0;color:var(--m);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline}
+table.kv{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+.kv td{padding:6px 4px;border-top:1px solid var(--ln);vertical-align:top}.kv td:first-child{color:var(--m);width:42%}
+.kv td:last-child{word-break:break-all;text-align:left}
+pre{background:#000;padding:10px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-break:break-all;margin:8px 0 0;color:#cbd5e1}
+.note{display:flex;gap:6px;font-size:12.5px;line-height:1.7;color:#cfe3ff;background:#0d1a2b;border-radius:8px;padding:8px;margin:8px 0 0}.note svg{flex:none;margin-top:4px}
+.note.bad{color:#fecaca;background:#2a1111}
+.cands{display:flex;flex-wrap:wrap;gap:6px}
+.cand{background:var(--s2);border:1px solid var(--ln);border-radius:10px;padding:8px 10px;color:var(--t);cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:2px;font:inherit}
+.cand code{font-size:15px;font-weight:700}.cand small{color:var(--m);font-size:11px}
+.cand.on{border-color:var(--y);background:#2a2406}
+details.ocr{margin-top:10px}details.ocr summary{cursor:pointer;color:var(--m);font-size:13px}
+.part{border:2px solid var(--y)}
+.part-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.pn{font:700 26px "JetBrains Mono";color:var(--y);letter-spacing:.5px}
+.alias{font-size:12px;color:#93c5fd;margin:2px 0 4px}.alias code{color:#fff}
+.pt{font-size:15px;font-weight:600;margin-top:2px}.pt span{color:var(--m);font-weight:500;font-size:13px}
+.mfr{display:flex;flex-direction:column;align-items:flex-end;gap:4px}.mfr b{font-size:14px}
+.srcbar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.desc{font-size:13.5px;line-height:1.8;color:#d6dae0;margin:6px 0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.actions .btn{flex:1 1 auto}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
+.lbl{font-size:12px;color:var(--m);flex-basis:100%}
+.pnchip{background:#000;border:1px solid var(--ln);border-radius:8px;padding:4px 8px;font-size:13px;direction:ltr}
+.pnchip.new{border-color:var(--g);color:#86efac}
+.am{display:grid;grid-template-columns:96px 1fr;gap:8px;padding:8px 0;border-top:1px solid var(--ln)}
+.am:first-of-type{border-top:0}
+.am-b{font-weight:700;font-size:13px;padding-top:4px}
+.am-l{display:flex;flex-direction:column;gap:6px}
+.am-i{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.am-i code{background:#000;padding:4px 8px;border-radius:7px;font-size:14px;font-weight:700;color:#fff}
+.conf{font-size:11px;padding:2px 7px;border-radius:99px}
+.conf.high{background:#123222;color:#86efac}.conf.medium{background:#3b2a07;color:#fcd34d}.conf.low{background:#3a1515;color:#fca5a5}
+.srclink{font-size:11.5px;color:#93c5fd;display:inline-flex;gap:3px;align-items:center;text-decoration:none}
+.eq{padding:8px 0;border-top:1px solid var(--ln)}.eq:first-of-type{border-top:0}
+.eq small{color:var(--m)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{background:#000;border:1px solid var(--ln);border-radius:7px;padding:3px 8px;font:500 12.5px "JetBrains Mono"}
+.links{display:grid;gap:6px}
+.links a{display:flex;gap:6px;align-items:center;color:#bfdbfe;text-decoration:none;font-size:13px;background:#0d1a2b;padding:9px 10px;border-radius:10px}
+.sbox{display:flex;gap:8px}
+.sbox input{flex:1;min-width:0;background:#000;border:2px solid var(--ln);border-radius:12px;color:var(--t);padding:12px;font:600 16px "JetBrains Mono";outline:none;text-align:left}
+.sbox input:focus{border-color:var(--y)}
+.sbox .snap{padding:12px}
+.quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.quick button{background:var(--s3);border:1px dashed #4a4f56;color:var(--y);border-radius:8px;padding:6px 9px;font:500 12px "JetBrains Mono";cursor:pointer}
+.hrow{all:unset;cursor:pointer;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--ln);width:100%;box-sizing:border-box}
+.hrow code{font-weight:700;color:var(--y)}.hrow span{font-size:13px}.hrow small{color:var(--m);margin-inline-start:auto;font-size:11.5px}
+.disc{display:flex;gap:6px;font-size:12px;color:var(--m);line-height:1.7;margin-top:12px}.disc svg{flex:none;margin-top:3px}
+.tabs{grid-template-columns:repeat(5,1fr)}
+.links-a{display:flex;gap:6px;align-items:center;color:#bfdbfe;text-decoration:none;font-size:13px;background:#0d1a2b;padding:10px;border-radius:10px;margin:6px 0}
+.live{position:fixed;inset:0;z-index:50;background:#000}
+.live video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.guide{position:absolute;left:8%;right:8%;top:28%;height:34%;}
+.guide i{position:absolute;width:36px;height:36px;border:4px solid var(--y)}
+.guide i:nth-child(1){top:0;left:0;border-right:0;border-bottom:0;border-radius:10px 0 0 0}
+.guide i:nth-child(2){top:0;right:0;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
+.guide i:nth-child(3){bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 10px}
+.guide i:nth-child(4){bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.scanbar{position:absolute;left:4%;right:4%;height:2px;background:var(--y);box-shadow:0 0 14px 3px var(--y);animation:l 1.6s ease-in-out infinite alternate}
+.live-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;padding:14px;padding-top:calc(14px + env(safe-area-inset-top));background:linear-gradient(#000c,#0000);color:#fff;font-size:14px;font-weight:600}
+.live-top span{flex:1;text-align:center}
+.lbtn{background:#0008;border:1px solid #fff3;color:#fff;border-radius:99px;width:44px;height:44px;display:grid;place-items:center}
+.live-bottom{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px;padding-bottom:calc(20px + env(safe-area-inset-bottom));background:linear-gradient(#0000,#000d);color:#ddd}
+.live-seen{display:flex;gap:6px;min-height:24px}
+.shutter{width:78px;height:78px;border-radius:50%;border:5px solid #fff;background:none;display:grid;place-items:center;padding:0}
+.shutter i{width:60px;height:60px;border-radius:50%;background:var(--y)}
+.live-bottom small{font-size:12px;opacity:.85}
+.fab{bottom:calc(18px + env(safe-area-inset-bottom))}
+footer{text-align:center;font-size:11.5px;color:var(--m);margin-top:16px;line-height:1.7}
+</style>
+</head>
+<body>
+<div id="root"><div id="splash" style="padding:40px 20px;text-align:center;color:#9aa1a9">جاري تحميل الأداة…</div></div>
+<script>
+window.__errs=[];
+window.addEventListener("error",function(e){window.__errs.push((e.message||"")+" @ "+(e.filename||"").split("/").pop()+":"+e.lineno);show();});
+window.addEventListener("unhandledrejection",function(e){var r=e.reason;window.__errs.push("promise: "+(r&&(r.message||r.code)||r));});
+function show(){if(window.__appStarted)return;var s=document.getElementById("splash");if(s)s.innerHTML='<b style="color:#fca5a5">الأداة ماقدرتش تفتح</b><pre dir="ltr" style="text-align:left;white-space:pre-wrap;font-size:12px">'+window.__errs.join("\n").replace(/</g,"&lt;")+'</pre><p>صوّر الشاشة دي وابعتهالي</p>';}
+setTimeout(function(){if(!window.__appStarted){window.__errs.push("timeout: scripts did not start");show();}},15000);
+</script>
+<script src="lib/react.production.min.js"></script>
+<script src="lib/react-dom.production.min.js"></script>
+<script>window.react = window.React;</script>
+<script src="lib/lucide-react.min.js"></script>
+<script src="lib/zxing.min.js"></script>
+<script src="lib/jsQR.js"></script>
+<script src="lib/tesseract.min.js"></script>
+<script src="app.js"></script>
+<script>if ("serviceWorker" in navigator) { window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); }); }</script>
+</body>
+</html>
